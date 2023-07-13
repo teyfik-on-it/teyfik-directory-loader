@@ -150,9 +150,7 @@ export default class DirectoryLoader {
     return file
       .replace(root, '')
       .slice(1, -(extension.length + 1))
-      .replace(/\./g, '\\.')
-      .replace(/\//g, '.')
-      .split('.');
+      .split('/');
   }
 
   private loader(extension: string): Loader {
