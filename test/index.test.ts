@@ -92,4 +92,33 @@ describe('json directory loader', () => {
 
     expect(data).toStrictEqual(firstThreeFiles);
   });
+
+  const numberIndex = {
+    first: {
+      lorem: {
+        ipsum: {
+          '0': { foo: 'bar' },
+          '10': {
+            bar: 'baz',
+          },
+        },
+      },
+    },
+    second: {
+      10: {
+        foo: {
+          bar: 'baz',
+        },
+      },
+    },
+    third: {
+      foo: ['x', 'y'],
+    },
+  };
+
+  it('should load file with number index properly', async () => {
+    const data = await directoryLoader('test', 'number-index').load();
+
+    expect(data).toStrictEqual(numberIndex);
+  });
 });

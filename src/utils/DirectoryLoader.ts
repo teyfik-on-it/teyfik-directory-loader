@@ -1,7 +1,15 @@
 import glob from 'fast-glob';
-import { unflatten } from 'flat';
 import { readFile } from 'fs/promises';
-import { chunk, get, isNull, isUndefined, lowerCase, merge, set } from 'lodash';
+import {
+  chunk,
+  get,
+  isObject,
+  isUndefined,
+  lowerCase,
+  merge,
+  set,
+  setWith,
+} from 'lodash';
 import { extname } from 'path';
 import resolve from '../helpers/resolve';
 import jsonLoader from '../loaders/jsonLoader';
@@ -67,14 +75,22 @@ export default class DirectoryLoader {
     const pattern = resolve(root, '**', this.matcher());
     const files = await glob(pattern);
     const contents = await this.loadChunks(root, files);
-    const result = contents.reduce((p, [path, right]) => {
-      const left = get(p, path);
+    const result = contents.reduce((target, [path, right]) => {
+      const left = get(target, path);
 
-      if (isNull(left) || isUndefined(left)) {
-        return set(p, path, right);
+      if (path.length > 1) {
+        const parentPath = path.slice(0, path.length - 1);
+
+        setWith(target, parentPath, get(target, parentPath), Object);
       }
 
-      return set(p, path, merge(left, right));
+      if (isObject(left)) {
+        set(target, path, merge(left, right));
+      } else {
+        set(target, path, right);
+      }
+
+      return target;
     }, {});
 
     return result;
@@ -95,8 +111,8 @@ export default class DirectoryLoader {
   private async loadChunks(
     root: string,
     files: string[],
-  ): Promise<Array<[string, unknown]>> {
-    let contents = [] as Array<[string, unknown]>;
+  ): Promise<Array<[string[], unknown]>> {
+    let contents = [] as Array<[string[], unknown]>;
 
     files = files.sort();
 
@@ -119,20 +135,24 @@ export default class DirectoryLoader {
     return contents;
   }
 
-  private async parse(root: string, file: string): Promise<[string, unknown]> {
+  private async parse(
+    root: string,
+    file: string,
+  ): Promise<[string[], unknown]> {
     const extension = lowerCase(extname(file));
 
     return await readFile(file, 'utf-8')
       .then((content) => this.loader(extension).parse(content))
-      .then((data) => unflatten(data))
       .then((result) => [this.path(root, file, extension), result]);
   }
 
-  private path(root: string, file: string, extension: string): string {
+  private path(root: string, file: string, extension: string): string[] {
     return file
       .replace(root, '')
       .slice(1, -(extension.length + 1))
-      .replace(/\//g, '.');
+      .replace(/\./g, '\\.')
+      .replace(/\//g, '.')
+      .split('.');
   }
 
   private loader(extension: string): Loader {
