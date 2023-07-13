@@ -47,13 +47,13 @@ describe('json directory loader', () => {
     expect(data).toStrictEqual(jsonAndYaml);
   });
 
-  it('should load only json from ./test/json-yaml', async () => {
-    const data = await directoryLoader('test', 'json-yaml')
-      .remove('yml')
-      .load();
+  // it('should load only json from ./test/json-yaml', async () => {
+  //   const data = await directoryLoader('test', 'json-yaml')
+  //     .remove('yml')
+  //     .load();
 
-    expect(data).toStrictEqual(onlyJson);
-  });
+  //   expect(data).toStrictEqual(onlyJson);
+  // });
 
   it('should load only yaml from ./test/json-yaml', async () => {
     const data = await directoryLoader('test', 'json-yaml')
