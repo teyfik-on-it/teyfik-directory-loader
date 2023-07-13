@@ -46,3 +46,12 @@ Removing by `yaml` extension:
 ```ts
 directoryLoader('json-and-yaml-files').remove('yaml').load();
 ```
+
+### Increasing open files limit
+
+You can set maximum number of open files at a time. This is useful when you are
+working with too many files. The default value is `1.000``.
+
+```ts
+directoryLoader('too-many-files').openFiles(5000).load();
+```

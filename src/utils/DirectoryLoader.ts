@@ -11,6 +11,7 @@ import Loader from './Loader';
 export default class DirectoryLoader {
   private readonly loaders = new Map<string, Loader>();
   private segments?: string[];
+  private openFilesLimit = 1000;
 
   constructor(segments?: string[]) {
     if (segments != null) {
@@ -78,16 +79,21 @@ export default class DirectoryLoader {
     return result;
   }
 
+  openFiles(limit: number): this {
+    this.openFilesLimit = limit;
+
+    return this;
+  }
+
   private async loadChunks(
     root: string,
     files: string[],
-    size = 1000,
   ): Promise<Array<[string, unknown]>> {
     let contents = [] as Array<[string, unknown]>;
 
     files = files.sort();
 
-    for (const ch of chunk(files.sort(), size)) {
+    for (const ch of chunk(files.sort(), this.openFilesLimit)) {
       contents = contents.concat(
         await Promise.all(ch.map(async (file) => await this.parse(root, file))),
       );
