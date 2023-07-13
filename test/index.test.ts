@@ -77,4 +77,19 @@ describe('json directory loader', () => {
 
     expect(data).toStrictEqual(json);
   });
+
+  // Files are being loaded in alphabetical order
+  const firstThreeFiles = {
+    eight: { foo: 'bar' },
+    five: { foo: 'bar' },
+    four: { foo: 'bar' },
+  };
+
+  it('should only load first 3 files', async () => {
+    const data = await directoryLoader('test', 'too-many-files')
+      .maxFiles(3)
+      .load();
+
+    expect(data).toStrictEqual(firstThreeFiles);
+  });
 });
