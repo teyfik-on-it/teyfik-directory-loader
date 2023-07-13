@@ -68,4 +68,13 @@ describe('json directory loader', () => {
 
     expect(data).toStrictEqual({});
   });
+
+  it('should remove and add JSON loader', async () => {
+    const data = await directoryLoader('test', 'json')
+      .remove('json')
+      .add('json', JSON.parse)
+      .load();
+
+    expect(data).toStrictEqual(json);
+  });
 });

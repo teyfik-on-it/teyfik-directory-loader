@@ -41,7 +41,7 @@ export default class DirectoryLoader {
       throw new Error('Parser is not defined');
     }
 
-    return this.add(loader, parse);
+    return this.add(new Loader(loader, parse));
   }
 
   remove(extension: string): this {
