@@ -1,7 +1,7 @@
 import glob from 'fast-glob';
 import { unflatten } from 'flat';
 import { readFile } from 'fs/promises';
-import { get, isNull, isUndefined, lowerCase, merge, set } from 'lodash';
+import { chunk, get, isNull, isUndefined, lowerCase, merge, set } from 'lodash';
 import { extname } from 'path';
 import resolve from '../helpers/resolve';
 import jsonLoader from '../loaders/jsonLoader';
@@ -64,9 +64,7 @@ export default class DirectoryLoader {
     const root = resolve(...this.segments);
     const pattern = resolve(root, '**', this.matcher());
     const files = await glob(pattern);
-    const contents = await Promise.all(
-      files.sort().map(async (file) => await this.parse(root, file)),
-    );
+    const contents = await this.loadChunks(root, files);
     const result = contents.reduce((p, [path, right]) => {
       const left = get(p, path);
 
@@ -78,6 +76,24 @@ export default class DirectoryLoader {
     }, {});
 
     return result;
+  }
+
+  private async loadChunks(
+    root: string,
+    files: string[],
+    size = 1000,
+  ): Promise<Array<[string, unknown]>> {
+    let contents = [] as Array<[string, unknown]>;
+
+    files = files.sort();
+
+    for (const ch of chunk(files.sort(), size)) {
+      contents = contents.concat(
+        await Promise.all(ch.map(async (file) => await this.parse(root, file))),
+      );
+    }
+
+    return contents;
   }
 
   private async parse(root: string, file: string): Promise<[string, unknown]> {
