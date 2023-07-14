@@ -8,6 +8,74 @@
 npm i teyfik-directory-loader
 ```
 
+### TL; DR
+
+For the directory structure, file contents and the usage below;
+
+#### Directory structure
+
+```
+.
+└── path
+  └── to
+    └── files
+      ├── foo
+      | └── first.json
+      └── bar
+        └── second.yml
+```
+
+#### File contents
+
+`path/to/files/foo/first.json`
+
+```json
+{
+  "a": 1,
+  "b": {
+    "c": 2
+  }
+}
+```
+
+`path/to/files/bar/second.yml`
+
+```json
+{
+  "x": "string",
+  "y": false
+}
+```
+
+#### Usage
+
+```ts
+import directoryLoader from 'teyfik-directory-loader';
+
+directoryLoader('path', 'to', 'files').remove('yml').load();
+```
+
+#### Output
+
+```json
+{
+  "foo": {
+    "first": {
+      "a": 1,
+      "b": {
+        "c": 2
+      }
+    }
+  },
+  "bar": {
+    "second": {
+      "x": "string",
+      "y": false
+    }
+  }
+}
+```
+
 ### Loading directories
 
 By default, `directoryLoader` comes with JSON and YAML loader. You can change
