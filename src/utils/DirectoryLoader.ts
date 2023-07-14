@@ -62,6 +62,12 @@ export default class DirectoryLoader {
     return this;
   }
 
+  clear(): this {
+    this.loaders.clear();
+
+    return this;
+  }
+
   async load(): Promise<object> {
     if (isUndefined(this.segments)) {
       throw new Error('Root directory is not defined');

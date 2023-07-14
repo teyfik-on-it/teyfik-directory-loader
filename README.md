@@ -90,6 +90,8 @@ import directoryLoader from 'teyfik-directory-loader';
 directoryLoader('path', 'to', 'files').remove('yml').load();
 ```
 
+### Adding loader
+
 Also you can add your custom loaders following this example:
 
 ```ts
@@ -97,6 +99,8 @@ directoryLoader('path', 'to', 'files')
   .add('xml', (input) => parseXML(input))
   .load();
 ```
+
+### Removing loader
 
 While removing a loader, any matching extension will remove the loader.
 Therefore both of the following approaches will work properly.
@@ -113,6 +117,12 @@ Removing by `yaml` extension:
 
 ```ts
 directoryLoader('json-and-yaml-files').remove('yaml').load();
+```
+
+### Clearing all loaders
+
+```ts
+directoryLoader().clear().load();
 ```
 
 ### Increasing open files limit
