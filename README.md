@@ -52,7 +52,7 @@ For the directory structure, file contents and the usage below;
 ```ts
 import directoryLoader from 'teyfik-directory-loader';
 
-directoryLoader('path', 'to', 'files').remove('yml').load();
+directoryLoader('path', 'to', 'files').load();
 ```
 
 #### Output

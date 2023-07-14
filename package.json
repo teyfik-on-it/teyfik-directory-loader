@@ -1,6 +1,6 @@
 {
   "name": "teyfik-directory-loader",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "A simple and customizable package for loading serialized files under a directory keeping the structure.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
