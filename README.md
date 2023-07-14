@@ -125,19 +125,19 @@ directoryLoader('json-and-yaml-files').remove('yaml').load();
 directoryLoader().clear().load();
 ```
 
-### Increasing open files limit
+### Updating open files limit
 
 You can set maximum number of open files at a time. This is useful when you are
-working with too many files. The default value is `Infinity``.
+working with too many files. The default value is `Infinity`
 
 ```ts
 directoryLoader('too-many-files').openFiles(5000).load();
 ```
 
-### Increasing max files limit
+### Updating max files limit
 
 You can set a limit for total number files to be loaded. This is useful when you
-are working with too many files. The default value is `Infinity``.
+are working with too many files. The default value is `Infinity`
 
 ```ts
 directoryLoader('too-many-files').maxFiles(10000).load();
